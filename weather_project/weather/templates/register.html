@@ -1,0 +1,29 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="utf-8">
+    <title>Реєстрація</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <header class="topbar">
+        <div class="topbar-left">
+            <span class="logo-title">Погода</span>
+        </div>
+    </header>
+    <div class="container small">
+        <h2>Реєстрація</h2>
+        <form method="POST" class="auth-form">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Зареєструватися</button>
+        </form>
+        <p>Вже маєте акаунт? <a href="{% url 'login' %}">Увійти</a></p>
+        {% for message in messages %}
+            <div class="message">{{ message }}</div>
+        {% endfor %}
+    </div>
+</body>
+</html>

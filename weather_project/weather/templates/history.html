@@ -1,0 +1,37 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="utf-8">
+    <title>Історія пошуків погоди</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <header class="topbar">
+        <div class="topbar-left">
+            <span class="logo-title">Погода</span>
+        </div>
+        <div class="topbar-right">
+            <a class="btn" href="{% url 'main' %}">На головну</a>
+            <a class="btn btn-logout" href="{% url 'logout' %}">Вийти з акаунту</a>
+        </div>
+    </header>
+    <div class="container">
+        <h2>Історія ваших пошуків</h2>
+        <ul class="history-list">
+            {% for item in history %}
+                <li>
+                    <span class="history-date">{{ item.search_date|date:"d.m.Y H:i" }}</span>
+                    <span><b>{{ item.city }}</b>: {{ item.temperature }}°C, {{ item.description }}</span>
+                </li>
+            {% empty %}
+                <li>Пошуків поки не було.</li>
+            {% endfor %}
+        </ul>
+        <div class="buttons">
+            <a class="btn" href="{% url 'main' %}">На головну</a>
+        </div>
+    </div>
+</body>
+</html>

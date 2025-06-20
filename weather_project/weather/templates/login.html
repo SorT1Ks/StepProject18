@@ -1,0 +1,30 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="utf-8">
+    <title>Вхід у акаунт</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <header class="topbar">
+        <div class="topbar-left">
+            <span class="logo-title">Погода</span>
+        </div>
+    </header>
+    <div class="container small">
+        <h2>Вхід у акаунт</h2>
+        <form method="POST" class="auth-form">
+            {% csrf_token %}
+            <input type="text" name="username" placeholder="Логін" required>
+            <input type="password" name="password" placeholder="Пароль" required>
+            <button type="submit">Увійти</button>
+        </form>
+        <p>Ще не маєте акаунту? <a href="{% url 'register' %}">Зареєструватися</a></p>
+        {% for message in messages %}
+            <div class="message">{{ message }}</div>
+        {% endfor %}
+    </div>
+</body>
+</html>

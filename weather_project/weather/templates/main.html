@@ -1,0 +1,81 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="utf-8">
+    <title>Погода</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.10/css/weather-icons.min.css">
+    <style>
+      .wind-arrow {
+        display: inline-block;
+        transition: transform 0.3s;
+        vertical-align: middle;
+      }
+    </style>
+</head>
+<body class="{{ weather_class }}">
+    <header class="topbar">
+        <div class="topbar-left">
+            <span class="logo-title">Погода</span>
+        </div>
+        <div class="topbar-right">
+            <a class="btn" href="{% url 'history' %}">Історія пошуків</a>
+            <a class="btn btn-logout" href="{% url 'logout' %}">Вийти з акаунту</a>
+        </div>
+    </header>
+    <div class="container">
+        <form method="POST" class="weather-form">
+            {% csrf_token %}
+            <input type="text" name="city" placeholder="Введіть назву міста" required>
+            <button type="submit" class="btn">Дізнатися погоду</button>
+        </form>
+        {% if weather %}
+            <div class="weather-info">
+                <h2>Погода у місті {{ weather.city }}:</h2>
+                <div style="font-size:74px; margin-bottom:4px;">
+                    {% if weather.weather_main == 'clear' %}
+                        <i class="wi wi-day-sunny"></i>
+                    {% elif weather.weather_main == 'clouds' %}
+                        <i class="wi wi-cloudy"></i>
+                    {% elif weather.weather_main == 'rain' %}
+                        <i class="wi wi-rain"></i>
+                    {% elif weather.weather_main == 'snow' %}
+                        <i class="wi wi-snow"></i>
+                    {% elif weather.weather_main == 'thunderstorm' %}
+                        <i class="wi wi-thunderstorm"></i>
+                    {% else %}
+                        <img class="weather-icon" src="https://openweathermap.org/img/wn/{{ weather.icon }}@2x.png" alt="{{ weather.description }}">
+                    {% endif %}
+                </div>
+                <p>{{ weather.description }}</p>
+                <p><b>Температура:</b> {{ weather.temperature }}°C</p>
+                <p><b>Відчувається як:</b> {{ weather.feels_like }}°C</p>
+                <p><b>Мін.:</b> {{ weather.temp_min }}°C | <b>Макс.:</b> {{ weather.temp_max }}°C</p>
+                <p><b>Вологість:</b> {{ weather.humidity }}%</p>
+                <p><b>Тиск:</b> {{ weather.pressure }} гПа</p>
+                <p>
+                  <b>Вітер:</b> {{ weather.wind }} м/с
+                  <span class="wind-arrow" style="transform: rotate({{ weather.wind_deg|default:'0' }}deg);">
+                    <svg width="22" height="22" viewBox="0 0 20 20">
+                      <polygon points="10,3 14,17 10,14 6,17" style="fill:#355c7d" />
+                    </svg>
+                  </span>
+                </p>
+                <p><b>Схід сонця:</b> {{ weather.sunrise }} <b>| Захід сонця:</b> {{ weather.sunset }}</p>
+                <hr style="width:60%;margin:18px auto 10px auto;">
+                {% if city_time %}
+                  <div style="font-size:1.09em;color:#8798b2;">
+                      <i class="wi wi-time-3"></i>
+                      Поточний час у місті: <b>{{ city_time|date:"d.m.Y H:i" }}</b>
+                  </div>
+                {% endif %}
+            </div>
+        {% endif %}
+        {% for message in messages %}
+            <div class="message">{{ message }}</div>
+        {% endfor %}
+    </div>
+</body>
+</html>
